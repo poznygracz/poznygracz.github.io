@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>pozny - logowanie TikTok</title>
+<style>body{font-family:system-ui,sans-serif;max-width:720px;margin:40px auto;padding:0 16px;line-height:1.6;color:#222}
+textarea{width:100%;font-family:monospace;font-size:.85rem}button{font-size:1.1rem;padding:10px 22px;margin:8px 0;cursor:pointer}
+.err{color:#b00020}.ok{color:#0a7a2f}</style></head><body>
+<h1>Logowanie do TikToka</h1>
+<p id="msg"></p>
+<textarea id="u" rows="5" readonly></textarea><br>
+<button id="b">Kopiuj</button> <span id="done" class="ok"></span>
+<p>Wróć do programu pozny i wklej skopiowany tekst w oknie, które na to czeka. Nikomu go nie wysyłaj.</p>
+<script>
+var p = new URLSearchParams(location.search), u = document.getElementById("u"), m = document.getElementById("msg");
+if (p.get("error")) { m.className = "err"; m.textContent = "TikTok zgłosił błąd: " + (p.get("error_description") || p.get("error")); }
+else if (p.get("code")) { m.textContent = "Gotowe. Skopiuj poniższy adres:"; }
+else { m.className = "err"; m.textContent = "Brak kodu w adresie. Zacznij logowanie z programu pozny."; }
+u.value = location.href;
+document.getElementById("b").onclick = function () {
+  var ok = function () { document.getElementById("done").textContent = "Skopiowano"; };
+  if (navigator.clipboard) { navigator.clipboard.writeText(u.value).then(ok, function () { u.select(); document.execCommand("copy"); ok(); }); }
+  else { u.select(); document.execCommand("copy"); ok(); }
+};
+</script></body></html>
